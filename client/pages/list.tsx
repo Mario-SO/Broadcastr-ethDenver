@@ -26,6 +26,7 @@ const List: NextPage = () => {
     args: [address],
   });
 
+  console.log(data);
   if (isLoading || data === undefined) {
     return <div>loading</div>;
   }

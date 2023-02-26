@@ -3,7 +3,10 @@ import { ViewContext } from "context/viewContext";
 import { PlayerURL } from "utils/constants";
 import MintButton from "components/Buttons/MintButton";
 import Navbar from "components/Elements/Navbar";
-
+import ViewOnPlatform from "components/Buttons/ViewOnPlatform";
+import Button from "components/Buttons/Button";
+import ShareButton from "components/Share/Button";
+import LensLogin from "components/Buttons/LensLogin";
 const WatchComponent = () => {
   const context = useContext(ViewContext);
 
@@ -14,7 +17,14 @@ const WatchComponent = () => {
 
   return (
     <>
-      <Navbar address={address} />
+      <Navbar>
+        <ViewOnPlatform address={address} />
+        <ShareButton />
+        <Button styles="btn-info">
+          <a className="text-black no-underline">Know more</a>
+        </Button>
+        <LensLogin />
+      </Navbar>
       <div className="flex flex-col lg:flex-row w-full h-full">
         <div className="md:h-full w-full flex flex-col">
           <iframe

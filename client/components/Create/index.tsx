@@ -5,6 +5,7 @@ import CreateLNFT from "components/Create/CreateForm";
 import Intro from "components/Create/Intro";
 import Container from "components/Elements/Container";
 import GoBackButton from "components/Buttons/GoBackButton";
+import Navbar from "components/Elements/Navbar";
 
 const CreateComponent = () => {
   const [step, setStep] = useState(0);
@@ -36,6 +37,8 @@ const CreateComponent = () => {
   };
 
   return (
+    <>
+    
     <Container>
       <div className="flex flex-row">
         <h2 className="mr-auto">{step + 1}/3</h2>
@@ -49,6 +52,8 @@ const CreateComponent = () => {
       </div>
       {renderStep()}
     </Container>
+    </>
+
   );
 };
 

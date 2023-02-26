@@ -10,19 +10,12 @@ import {
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
 import { polygon } from "@wagmi/core/chains";
-import { infuraProvider } from "wagmi/providers/infura";
 import { publicProvider } from "wagmi/providers/public";
 import Router from "components/Elements/Router";
 import { ModalContextProvider } from "context/modalContext";
 import { Layout } from "components/Elements/Layout";
 
-const { chains, provider } = configureChains(
-  [polygon],
-  [
-    infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_API_KEY ?? "" }),
-    publicProvider(),
-  ]
-);
+const { provider, webSocketProvider, chains } = configureChains([polygon], [publicProvider()]);
 
 const { connectors } = getDefaultWallets({
   appName: "Broadcastr",
@@ -30,9 +23,9 @@ const { connectors } = getDefaultWallets({
 });
 
 const wagmiClient = createClient({
-  autoConnect: true,
   connectors,
   provider,
+  autoConnect: true,
 });
 
 const client = createReactClient({
@@ -45,16 +38,16 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <LivepeerConfig client={client}>
       <WagmiConfig client={wagmiClient}>
-        <Head> broadcastr </Head>
-        <RainbowKitProvider chains={chains}>
-          <Router>
-            <ModalContextProvider>
-              <Layout>
-                <Component {...pageProps} />
-              </Layout>
-            </ModalContextProvider>
-          </Router>
-        </RainbowKitProvider>
+          <Head> broadcastr </Head>
+          <RainbowKitProvider chains={chains}>
+            <Router>
+              <ModalContextProvider>
+                <Layout>
+                  <Component {...pageProps} />
+                </Layout>
+              </ModalContextProvider>
+            </Router>
+          </RainbowKitProvider>
       </WagmiConfig>
     </LivepeerConfig>
   );
