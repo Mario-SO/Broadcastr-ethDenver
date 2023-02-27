@@ -1,42 +1,43 @@
 import React, { ReactNode, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { useAccount, useContractRead, Address } from "wagmi";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Container from "components/Elements/Container";
-import factoryContract from "contracts/CastrFactory-abi";
-import { Routes, ProtectedRutes, ContractAddress } from "utils/constants";
-import Image from 'next/image';
+import { Routes, ProtectedRutes } from "utils/constants";
+import useCastrAccount from "hooks/useCastrAccount";
+import Image from "next/image";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 const Router = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
   const route = router.pathname as Routes;
-  const { isConnected, address, status } = useAccount();
   const [isLoading, setIsLoading] = useState(true);
-  const { data, isLoading: loadingRead } = useContractRead({
-    address: ContractAddress,
-    abi: factoryContract,
-    functionName: "getCreatorChannels",
-    args: [address],
-  });
+  const {
+    isLoading: loadingRead,
+    isConnected,
+    accountCastrs,
+    isOwned,
+    isSuccess,
+  } = useCastrAccount();
 
   useEffect(() => {
-    const ArrayData = data as string[];
-    if (ProtectedRutes.includes(route) && !loadingRead) {
-      if (ArrayData?.length === 0 && route !== Routes.CREATE) {
-        router.push(Routes.CREATE);
-      } else if (data && ArrayData?.length > 0 && route !== Routes.CAST) {
-        router.push(Routes.CAST + "?address=" + ArrayData[0]);
+    if (ProtectedRutes.includes(route) && isSuccess) {
+      const address = router.query.address as string;
+      if (accountCastrs?.length === 0 && route !== Routes.HOME) {
+        router.push(Routes.HOME);
+      } else if (
+        (accountCastrs?.length > 0 && route !== Routes.CAST) ||
+        (route === Routes.CAST && !isOwned(address))
+      ) {
+        router.push(Routes.CAST + "?address=" + accountCastrs[0]);
       } else {
         setIsLoading(false);
       }
-    } else if (!ProtectedRutes.includes(route)) {
-      console.log(route, isLoading);
-
+    }
+    if (!ProtectedRutes.includes(route)) {
       setIsLoading(false);
     }
-  }, [isConnected, status, data, route, router, loadingRead]);
+  }, [route, isSuccess]);
 
-  if (isLoading) {
+  if (isLoading || loadingRead) {
     return (
       <Container>
         <h1 className="text-4xl font-bold">loading...</h1>
@@ -56,13 +57,9 @@ const Router = ({ children }: { children: ReactNode }) => {
               objectFit="contain"
             />
           </div>
-          <h1 className="text-2xl text-center">
-            Welcome to Broadcastr!
-          </h1>
+          <h1 className="text-2xl text-center">Welcome to Broadcastr!</h1>
 
-          <p className="text-center">
-            Connect your wallet to get started.
-          </p>
+          <p className="text-center">Connect your wallet to get started.</p>
           <ConnectButton />
         </div>
       </Container>
