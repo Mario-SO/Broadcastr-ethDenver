@@ -35,7 +35,7 @@ const StreamDetails = ({
   return (
     <div className="flex flex-col w-full rounded-xl">
       <div className="flex flex-col space-y-4 text-center">
-        <div className="flex flex-row lg:flex-col xl:flex-row w-full max-w-full text-white justify-center">
+        <div className="flex flex-row w-full max-w-full text-white justify-center">
           <DetailBox
             title="Subscription price"
             text={formatEther(details.price) + " MATIC"}
