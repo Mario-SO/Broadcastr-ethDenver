@@ -33,7 +33,7 @@ const StreamDetails = ({
     watch: true,
   });
   return (
-    <div className="flex flex-col w-full rounded-xl">
+    <div className="flex flex-col w-full rounded-xl border-solid border-1">
       <div className="flex flex-col space-y-4 text-center">
         <div className="flex flex-row w-full max-w-full text-white justify-center">
           <DetailBox

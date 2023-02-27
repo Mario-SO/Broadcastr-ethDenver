@@ -14,6 +14,7 @@ const useCastrAccount = () => {
 
   const isOwned = (address: string) => {
     const readData = data as string[];
+    console.log("readData", readData.includes(address), readData, address);
     if (!readData) return false;
     return readData.includes(address);
   };

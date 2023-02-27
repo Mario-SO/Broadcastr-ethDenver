@@ -20,13 +20,9 @@ const Router = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (ProtectedRutes.includes(route) && isSuccess) {
-      const address = router.query.address as string;
       if (accountCastrs?.length === 0 && route !== Routes.HOME) {
         router.push(Routes.HOME);
-      } else if (
-        (accountCastrs?.length > 0 && route !== Routes.CAST) ||
-        (route === Routes.CAST && !isOwned(address))
-      ) {
+      } else if (accountCastrs?.length > 0 && route !== Routes.CAST) {
         router.push(Routes.CAST + "?address=" + accountCastrs[0]);
       } else {
         setIsLoading(false);
