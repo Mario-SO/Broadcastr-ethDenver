@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode, useState, useEffect } from "react";
 
 interface ModalContextType {
   isOpen: boolean;
@@ -18,7 +18,9 @@ export const ModalContext = createContext<ModalContextType | undefined>(
 export function ModalContextProvider(props: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [modalContent, setModalContent] = useState<ReactNode>();
-
+  useEffect(() => {
+    console.log(isOpen)
+  }, []) 
   return (
     <ModalContext.Provider
       value={{

@@ -1,14 +1,25 @@
 import { useEffect, useState } from "react";
-import { client, challenge, authenticate } from "services/lens";
+import {
+  client,
+  challenge,
+  authenticate,
+  getDefaultProfile,
+} from "services/lens";
 import { useAccount, useSignMessage } from "wagmi";
 
 const useLens = () => {
   const [token, setToken] = useState<string | null>(null);
+  const [userProfile, setUserProfile] = useState<any>(null);
   const { address } = useAccount();
+
   const [messageToSign, setMessageToSign] = useState<string | null>(null);
   const { data, isError, isLoading, isSuccess, signMessage } = useSignMessage({
     message: messageToSign ? messageToSign : "",
   });
+
+  useEffect(() => {
+    address && setUserProfile(getDefaultProfileInfo());
+  }, [token]);
 
   useEffect(() => {
     if (messageToSign) {
@@ -55,9 +66,29 @@ const useLens = () => {
     setMessageToSign(challengeInfo.data.challenge.text);
   }
 
+  async function getDefaultProfileInfo() {
+    const profileData = localStorage.getItem("lensProfile");
+    if (profileData) {
+      return JSON.parse(profileData);
+    }
+    return client
+      .query({
+        query: getDefaultProfile,
+        variables: { address },
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .then((res) => {
+        setUserProfile(res?.data.defaultProfile);
+        return res?.data.defaultProfile;
+      });
+  }
+
   return {
     isLoggedIn: !!token,
     login,
+    userProfile
   };
 };
 

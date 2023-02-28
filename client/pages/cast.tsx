@@ -30,7 +30,6 @@ const Cast: NextPage = () => {
   return (
     <ViewContextProvider address={address as string}>
       <Navbar>
-        <ProfileBreadcrumb />
         <ViewOnPlatform address={address as string} />
         <ShareButton />
         <LensLogin />

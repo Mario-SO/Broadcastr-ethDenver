@@ -5,7 +5,7 @@ import { ContractAddress } from "utils/constants";
 
 const useCastrAccount = () => {
   const { address, isConnected } = useAccount();
-  const { data, isLoading, isSuccess } = useContractRead({
+  const { data, isLoading, isSuccess, isError } = useContractRead({
     address: ContractAddress,
     abi: factoryContract,
     functionName: "getCreatorChannels",
@@ -25,6 +25,7 @@ const useCastrAccount = () => {
     isLoading,
     isConnected,
     isSuccess,
+    isError
   };
 };
 

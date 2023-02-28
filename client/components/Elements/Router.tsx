@@ -5,7 +5,7 @@ import { Routes, ProtectedRutes } from "utils/constants";
 import useCastrAccount from "hooks/useCastrAccount";
 import Image from "next/image";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-
+import LensLogin from "components/Buttons/LensLogin";
 const Router = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
   const route = router.pathname as Routes;
@@ -16,8 +16,8 @@ const Router = ({ children }: { children: ReactNode }) => {
     accountCastrs,
     isOwned,
     isSuccess,
+    isError,
   } = useCastrAccount();
-
   useEffect(() => {
     if (ProtectedRutes.includes(route) && isSuccess) {
       if (accountCastrs?.length === 0 && route !== Routes.HOME) {
@@ -33,31 +33,31 @@ const Router = ({ children }: { children: ReactNode }) => {
     }
   }, [route, isSuccess]);
 
-  if (isLoading || loadingRead) {
+  if (ProtectedRutes.includes(route) && !isConnected) {
     return (
       <Container>
-        <h1 className="text-4xl font-bold">loading...</h1>
+        <div className="flex flex-col items-center space-y-4 w-full h-full">
+          <div className="w-12 h-12">
+            <Image
+              src="/logo.png"
+              alt="Broadcastr Logo"
+              height={10}
+              width={10}
+            />
+          </div>
+
+          <h1 className="text-2xl text-center">Welcome to Broadcastr!</h1>
+          <p className="text-center">Connect your wallet to get started.</p>
+          <LensLogin />
+        </div>
       </Container>
     );
   }
 
-  if (ProtectedRutes.includes(route) && !isConnected) {
+  if (isLoading || loadingRead) {
     return (
       <Container>
-        <div className="flex flex-col items-center space-y-4">
-          <div className="w-screen h-48 realtive">
-            <Image
-              src="/logo.png"
-              alt="Broadcastr Logo"
-              layout="fill"
-              objectFit="contain"
-            />
-          </div>
-          <h1 className="text-2xl text-center">Welcome to Broadcastr!</h1>
-
-          <p className="text-center">Connect your wallet to get started.</p>
-          <ConnectButton />
-        </div>
+        <h1 className="text-4xl font-bold">loading...</h1>
       </Container>
     );
   }

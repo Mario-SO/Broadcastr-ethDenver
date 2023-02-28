@@ -1,17 +1,23 @@
-import { useEnsAvatar } from "wagmi";
-import {
-  RainbowKitProvider,
-  AvatarComponent,
-} from '@rainbow-me/rainbowkit';
-const ProfileBreadcrumb = () => {
+import Image from "next/image";
+import useLens from "hooks/useLens";
 
-  
+const ipfsToHttps = (ipfsUrl: string) => {
+  if(!ipfsUrl) return "";
+  return ipfsUrl.replace("ipfs://", "https://lnfts.infura-ipfs.io/ipfs/");
+};
+
+const ProfileBreadcrumb = () => {
+  const { userProfile } = useLens();
+  if (!userProfile) {
+    return <></>;
+  }
+  const { picture } = userProfile;
   return (
     <div className="dropdown dropdown-end">
       <label tabIndex={0}>
-        <div className="avatar h-8 w-8">
-          <div className="h-full rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-            <img src="/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+        <div className="avatar h-12 w-12">
+          <div className="h-full rounded-full relative ring ring-primary ring-offset-base-100 ring-offset-2">
+            <Image src={ipfsToHttps(picture?.original.url)} alt="profile" layout="fill" />
           </div>
         </div>
       </label>
