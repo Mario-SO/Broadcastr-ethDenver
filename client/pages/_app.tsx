@@ -8,16 +8,51 @@ import {
   studioProvider,
 } from "@livepeer/react";
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { configureChains, createClient, WagmiConfig } from "wagmi";
+import { Chain, configureChains, createClient, WagmiConfig } from "wagmi";
 import { polygon } from "@wagmi/core/chains";
 import { publicProvider } from "wagmi/providers/public";
 import Router from "components/Elements/Router";
 import { ModalContextProvider } from "context/modalContext";
 import { Layout } from "components/Elements/Layout";
 
+import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
+
+const mantleChain: Chain = {
+  id: 5001,
+  name: 'Mantle',
+  network: 'Mantle Goerli',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'BIT',
+    symbol: 'BIT',
+  },
+  blockExplorers: {
+    default: { name: 'MantleExplorer', url: 'https://explorer.testnet.mantle.xyz/' },
+    etherscan: { name: 'MantleExplorer', url: 'https://explorer.testnet.mantle.xyz/' },
+  },
+  rpcUrls: {
+    default: {
+      http: ['https://rpc.testnet.mantlenetwork.io/'],
+      webSocket: undefined
+    },
+    public: {
+      http: ['https://rpc.testnet.mantlenetwork.io/'],
+      webSocket: undefined
+    }
+  },
+  testnet: true,
+};
+
 const { provider, webSocketProvider, chains } = configureChains(
-  [polygon],
-  [publicProvider()]
+  [polygon, mantleChain],
+  [
+    jsonRpcProvider({
+      rpc: (chain) => ({
+        http: `https://rpc.testnet.mantlenetwork.io/`,
+      }),
+    }),
+    publicProvider()
+  ]
 );
 
 const { connectors } = getDefaultWallets({

@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
-import { useAccount, useContractRead } from "wagmi";
+import { useAccount, useContractRead, useNetwork } from "wagmi";
 import factoryContract from "contracts/CastrFactory-abi";
-import { ContractAddress } from "utils/constants";
+import { ContractAddress, MantleAddress } from "utils/constants";
 
 const useCastrAccount = () => {
+  const { chain } = useNetwork();
   const { address, isConnected } = useAccount();
   const { data, isLoading, isSuccess, isError } = useContractRead({
-    address: ContractAddress,
+    address: chain?.name === "Mantle" ? MantleAddress : ContractAddress,
     abi: factoryContract,
     functionName: "getCreatorChannels",
     args: [address],
